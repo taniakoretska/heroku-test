@@ -1,5 +1,6 @@
 package tests;
 
+import data.Data;
 import org.testng.Assert;
 
 import org.testng.annotations.Test;
@@ -7,6 +8,7 @@ import pages.*;
 import utils.BaseTest;
 
 public class UITests extends BaseTest {
+
     @Test
     public void verifyExistingDataLogin() {
         driver.navigate().to("https://admin:admin@the-internet.herokuapp.com/basic_auth");
@@ -31,14 +33,14 @@ public class UITests extends BaseTest {
         Assert.assertFalse(isErrorMessagePresent, "No error message.");
     }
 
-    @Test // Bug - 500 Error (Internal Server Error)
-    public void verifyForgotPasswordFunctionality() {
+    @Test(dataProvider = "data-provider", dataProviderClass = Data.class) // Bug - 500 Error (Internal Server Error)
+    public void verifyForgotPasswordFunctionality(String data) {
         driver.navigate().to("https://the-internet.herokuapp.com/");
 
         HomePage homePage = new HomePage(driver);
 
         ForgotPasswordPage forgotPasswordPage = homePage.openForgotPasswordPage();
-        forgotPasswordPage.fillEmailField("testautomationtest@yopmail.com");
+        forgotPasswordPage.fillEmailField(data);
         forgotPasswordPage.clickSubmitButton();
 
         boolean isSuccessResetMessagePresent = forgotPasswordPage.isSuccessResetMessagePresent();
